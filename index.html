@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FoodLoop – Turn Surplus Meals into Savings</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="FoodLoop connects restaurants with surplus meals to nearby students and budget‑conscious diners, offering discounted food in real time, reducing waste and saving money.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f172a;
+  --primary:linear-gradient(135deg,#3b82f6 0%,#2dd4bf 100%);
+  --accent:#fbbf24;
+  --text:#f8fafc;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-family:'Inter',sans-serif;color:var(--text);scroll-behavior:smooth;}
+body{background:var(--bg);overflow-x:hidden;}
+.container{max-width:1200px;margin:0 auto;padding:0 1rem;}
+section{padding:100px 0;}
+h1{font-size:clamp(2.5rem,5vw,4.5rem);font-weight:700;line-height:1.2;}
+h2{font-size:2rem;margin-bottom:.5rem;}
+p{font-size:1rem;line-height:1.6;margin-bottom:1rem;}
+.btn{
+  display:inline-block;padding:.75rem 1.5rem;
+  background:var(--accent);color:#111;
+  border:none;border-radius:8px;
+  font-weight:600;cursor:pointer;
+  transition:transform .2s;
+}
+.btn:hover{transform:scale(1.05);}
+.glass{
+  background:rgba(255,255,255,0.03);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:24px;
+  padding:2rem;
+}
+nav{
+  position:fixed;top:0;left:0;width:100%;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1rem 2rem;z-index:1000;
+  transition:all .3s ease;
+}
+nav.shrink{
+  padding:.5rem 2rem;
+  backdrop-filter:blur(12px);
+  background:rgba(15,23,42,0.7);
+}
+nav .logo{font-size:1.5rem;font-weight:700;background:var(--primary);-webkit-background-clip:text;color:transparent;}
+nav a{color:var(--text);margin-left:1.5rem;text-decoration:none;font-weight:500;}
+section.hidden{opacity:0;transform:translateY(40px);transition:opacity .6s ease-out,transform .6s ease-out;}
+section.visible{opacity:1;transform:none;}
+.features{display:grid;gap:2rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}
+.feature-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:1.5rem;transition:transform .3s;}
+.feature-card:hover{transform:translateY(-5px);}
+.map{width:100%;height:300px;background:#1e293b;border-radius:24px;}
+form{display:flex;flex-direction:column;gap:.75rem;}
+input,select,textarea{
+  padding:.75rem 1rem;
+  border:none;border-radius:8px;
+  background:rgba(255,255,255,0.07);
+  color:var(--text);
+}
+input::placeholder,textarea::placeholder{color:#cbd5e1;}
+footer{background:#1e293b;padding:2rem 0;text-align:center;font-size:.875rem;}
+.logo-strip{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-top:1rem;}
+.logo-strip img{height:30px;filter:brightness(0) invert(1);}
+@media(max-width:768px){
+  nav{flex-direction:column;gap:.5rem;}
+}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="logo">FoodLoop</div>
+  <div>
+    <a href="#features">Features</a>
+    <a href="#signup">Sign Up</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<header class="container" style="padding-top:120px;">
+  <section class="hidden">
+    <h1>Turn Surplus Meals into Savings</h1>
+    <p style="font-size:1.25rem;">Discover discounted meals from nearby restaurants, reduce food waste, and save money—all in real time.</p>
+    <a href="#signup" class="btn">Get Started</a>
+  </section>
+</header>
+
+<section id="features" class="container hidden">
+  <h2>Why FoodLoop?</h2>
+  <p>Connecting restaurants with hungry students and budget‑conscious diners, we make every bite count.</p>
+  <div class="features">
+    <div class="feature-card glass">
+      <h3>Restaurant Surplus Dashboard</h3>
+      <p>Quickly list unsold dishes, set discounts, and monitor orders.</p>
+    </div>
+    <div class="feature-card glass">
+      <h3>Student & Diner Mobile App</h3>
+      <p>Browse nearby deals, filter by cuisine, and order with a tap.</p>
+    </div>
+    <div class="feature-card glass">
+      <h3>Geo‑Based Matching Engine</h3>
+      <p>Matches meals with users within a 2‑mile radius for fast pickup.</p>
+    </div>
+    <div class="feature-card glass">
+      <h3>Real‑Time Inventory Updates</h3>
+      <p>Live stock decrement and push notifications keep everyone informed.</p>
+    </div>
+    <div class="feature-card glass">
+      <h3>Secure Payments & Ratings</h3>
+      <p>Safe checkout and post‑pickup reviews build trust.</p>
+    </div>
+  </div>
+</section>
+
+<section class="container hidden" id="live-listings">
+  <h2>Live Example Listings</h2>
+  <p>See what’s cooking near you right now.</p>
+  <div class="glass" style="overflow:auto;">
+    <table style="width:100%;border-collapse:collapse;color:var(--text);">
+      <thead><tr style="border-bottom:1px solid rgba(255,255,255,0.2);"><th style="padding:0.5rem;">Restaurant</th><th style="padding:0.5rem;">Meal</th><th style="padding:0.5rem;">Discount</th><th style="padding:0.5rem;">Pickup Until</th></tr></thead>
+      <tbody>
+        <tr><td style="padding:0.5rem;">Campus Café</td><td style="padding:0.5rem;">Veggie Wrap</td><td style="padding:0.5rem;">30%</td><td style="padding:0.5rem;">8:00 PM</td></tr>
+        <tr><td style="padding:0.5rem;">Sushi Spot</td><td style="padding:0.5rem;">Miso Soup</td><td style="padding:0.5rem;">40%</td><td style="padding:0.5rem;">9:30 PM</td></tr>
+        <tr><td style="padding:0.5rem;">Pizza Hub</td><td style="padding:0.5rem;">Pepperoni Slice</td><td style="padding:0.5rem;">25%</td><td style="padding:0.5rem;">10:00 PM</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="container hidden" id="map-section">
+  <h2>Nearby Deals Map</h2>
+  <p>Explore discounted meals around your location.</p>
+  <div class="map glass" id="map">[Map Placeholder]</div>
+</section>
+
+<section class="container hidden" id="signup">
+  <h2>Join FoodLoop</h2>
+  <p>Choose your role and start saving or earning today.</p>
+  <div style="display:flex;flex-direction:column;gap:2rem;max-width:600px;margin:auto;">
+    <form id="studentForm">
+      <h3>Student / Diner</h3>
+      <input type="text" placeholder="Full Name" required>
+      <input type="email" placeholder="Email" required>
+      <input type="text" placeholder="Campus / Neighborhood" required>
+      <button type="submit" class="btn">Create Student Account</button>
+    </form>
+    <form id="restaurantForm">
+      <h3>Restaurant Manager</h3>
+      <input type="text" placeholder="Restaurant Name" required>
+      <input type="email" placeholder="Business Email" required>
+      <input type="text" placeholder="Location" required>
+      <button type="submit" class="btn">Create Manager Account</button>
+    </form>
+  </div>
+</section>
+
+<footer class="container">
+  <p>© 2026 FoodLoop – Reducing waste, one meal at a time.</p>
+  <div class="logo-strip">
+    <img src="https://via.placeholder.com/80x30?text=Partner1" alt="Partner 1">
+    <img src="https://via.placeholder.com/80x30?text=Partner2" alt="Partner 2">
+    <img src="https://via.placeholder.com/80x30?text=Partner3" alt="Partner 3">
+  </div>
+</footer>
+
+<script>
+/* Navbar shrink on scroll */
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{navbar.classList.toggle('shrink',window.scrollY>80);});
+
+/* IntersectionObserver for reveal */
+const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');entry.target.classList.remove('hidden');}})},{threshold:0.1});
+document.querySelectorAll('section').forEach(sec=>observer.observe(sec));
+
+/* Simple form handling (demo only) */
+document.getElementById('studentForm').addEventListener('submit',e=>{e.preventDefault();alert('Student account created!');});
+document.getElementById('restaurantForm').addEventListener('submit',e=>{e.preventDefault();alert('Restaurant account created!');});
+</script>
+</body>
+</html>
