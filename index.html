@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FoodLoop</title>
+<style>
+:root{
+--bg:#0f172a;
+--primary-gradient:linear-gradient(135deg,#3b82f6 0%,#2dd4bf 100%);
+--accent:#fbbf24;
+--text:#f8fafc;
+--glass-bg:rgba(255,255,255,0.03);
+--glass-border:rgba(255,255,255,0.1);
+}
+*, *::before, *::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+background:var(--bg);
+color:var(--text);
+font-family:system-ui, sans-serif;
+line-height:1.6;
+}
+.container{
+width:90%;
+max-width:1200px;
+margin:0 auto;
+}
+nav{
+position:fixed;
+top:0;
+left:0;
+right:0;
+height:70px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 2rem;
+background:rgba(15,23,42,0.6);
+backdrop-filter:blur(8px);
+border-bottom:1px solid var(--glass-border);
+z-index:1000;
+transition:height .3s, background .3s, backdrop-filter .3s;
+}
+nav.scrolled{
+height:55px;
+background:rgba(15,23,42,0.8);
+backdrop-filter:blur(12px);
+}
+nav .logo{
+font-size:1.5rem;
+font-weight:bold;
+color:var(--text);
+}
+nav ul{
+display:flex;
+gap:2rem;
+list-style:none;
+}
+nav a{
+color:var(--text);
+text-decoration:none;
+font-weight:500;
+transition:color .2s;
+}
+nav a:hover{color:var(--accent);}
+section{
+padding:100px 0;
+opacity:0;
+transform:translateY(30px);
+transition:opacity .6s ease-out, transform .6s ease-out;
+}
+section.visible{
+opacity:1;
+transform:translateY(0);
+}
+h1{
+font-size:clamp(2.5rem,5vw,4.5rem);
+margin-bottom:1rem;
+line-height:1.2;
+}
+h2{
+font-size:2rem;
+margin-bottom:1.5rem;
+}
+p{
+margin-bottom:1rem;
+max-width:800px;
+}
+.btn{
+display:inline-block;
+padding:0.9rem 1.8rem;
+border-radius:50px;
+font-weight:600;
+text-decoration:none;
+text-align:center;
+cursor:pointer;
+border:none;
+transition:transform .2s, box-shadow .2s;
+}
+.btn-primary{
+background:var(--primary-gradient);
+color:#fff;
+}
+.btn-accent{
+background:var(--accent);
+color:#0f172a;
+}
+.btn:hover{
+transform:translateY(-3px);
+box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+.glass-card{
+background:var(--glass-bg);
+backdrop-filter:blur(12px);
+border:1px solid var(--glass-border);
+border-radius:24px;
+padding:2rem;
+margin-bottom:1.5rem;
+}
+form{
+display:grid;
+gap:1rem;
+}
+input, select, textarea{
+width:100%;
+padding:0.8rem;
+border:none;
+border-radius:8px;
+background:rgba(255,255,255,0.05);
+color:var(--text);
+font-size:1rem;
+}
+input::placeholder{color:rgba(248,250,252,0.6);}
+textarea{resize:vertical;min-height:100px;}
+.trust{
+display:flex;
+flex-wrap:wrap;
+gap:1rem;
+justify-content:center;
+}
+.trust img{
+max-height:40px;
+opacity:0.7;
+filter:grayscale(100%);
+transition:opacity .3s, filter .3s;
+}
+.trust img:hover{opacity:1;filter:grayscale(0);}
+.footer{
+text-align:center;
+padding:2rem 0;
+font-size:0.9rem;
+color:rgba(248,250,252,0.6);
+}
+</style>
+</head>
+<body>
+<nav>
+<div class="logo">FoodLoop</div>
+<ul>
+<li><a href="#hero">Home</a></li>
+<li><a href="#how">How It Works</a></li>
+<li><a href="#restaurant">For Restaurants</a></li>
+<li><a href="#student">For Students</a></li>
+<li><a href="#trust">Trust</a></li>
+</ul>
+</nav>
+
+<section id="hero" class="visible">
+<div class="container">
+<h1>End‑of‑Day Surplus, Real‑Time Savings</h1>
+<p>Restaurants list unsold meals at discount prices. Students and budget‑conscious diners discover them instantly by location.</p>
+<div>
+<a href="#restaurant" class="btn btn-primary">List Your Surplus</a>
+<a href="#student" class="btn btn-accent">Find Meals Near You</a>
+</div>
+</div>
+</section>
+
+<section id="how" class="container">
+<h2>How It Works</h2>
+<div style="display:grid;gap:2rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
+<div class="glass-card">
+<h3>1. List Surplus</h3>
+<p>Restaurant uploads a meal with price, photo, and pickup window.</p>
+</div>
+<div class="glass-card">
+<h3>2. Discover Nearby</h3>
+<p>Users see meals sorted by distance, filter by cuisine, price, dietary tags.</p>
+</div>
+<div class="glass-card">
+<h3>3. Purchase & Pickup</h3>
+<p>Secure in‑app payment, instant confirmation, enjoy fresh food.</p>
+</div>
+</div>
+</section>
+
+<section id="restaurant" class="container">
+<h2>Restaurant Onboarding</h2>
+<p class="glass-card">Join FoodLoop to turn waste into revenue. Simple form, instant listings.</p>
+<form id="restoForm">
+<input type="text" placeholder="Restaurant Name" required>
+<input type="email" placeholder="Contact Email" required>
+<input type="tel" placeholder="Phone Number" required>
+<input type="text" placeholder="Address" required>
+<select required>
+<option value="">Cuisine Type</option>
+<option>Italian</option>
+<option>Asian</option>
+<option>Mexican</option>
+<option>American</option>
+<option>Other</option>
+</select>
+<textarea placeholder="Brief Description (optional)"></textarea>
+<button type="submit" class="btn btn-primary">Get Started</button>
+</form>
+</section>
+
+<section id="student" class="container">
+<h2>Student & Budget‑Conscious Sign‑Up</h2>
+<p class="glass-card">Create a free account to browse discounted meals near campus or home.</p>
+<form id="studentForm">
+<input type="text" placeholder="Full Name" required>
+<input type="email" placeholder="Email (University preferred)" required>
+<input type="tel" placeholder="Phone Number" required>
+<input type="password" placeholder="Password" minlength="6" required>
+<select required>
+<option value="">User Type</option>
+<option>Student</option>
+<option>Budget‑Conscious Diner</option>
+</select>
+<button type="submit" class="btn btn-accent">Join FoodLoop</button>
+</form>
+</section>
+
+<section id="trust" class="container">
+<h2>Trusted By</h2>
+<div class="trust">
+<img src="https://via.placeholder.com/120x40?text=Partner+1" alt="Partner 1">
+<img src="https://via.placeholder.com/120x40?text=Partner+2" alt="Partner 2">
+<img src="https://via.placeholder.com/120x40?text=Partner+3" alt="Partner 3">
+<img src="https://via.placeholder.com/120x40?text=Partner+4" alt="Partner 4">
+</div>
+</section>
+
+<footer class="footer">
+© 2025 FoodLoop • Reducing waste, one meal at a time.
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+const nav = document.querySelector('nav');
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+const currentScroll = window.pageYOffset;
+if (currentScroll > 50 && currentScroll > lastScroll) {
+nav.classList.add('scrolled');
+} else {
+nav.classList.remove('scrolled');
+}
+lastScroll = currentScroll <= 0 ? 0 : currentScroll;
+});
+
+const sections = document.querySelectorAll('section');
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('visible');
+}
+});
+}, {threshold: 0.1});
+sections.forEach(sec => observer.observe(sec));
+
+document.getElementById('restoForm').addEventListener('submit', function(e){
+e.preventDefault();
+alert('Thanks! Your restaurant is now onboarded (demo).');
+});
+document.getElementById('studentForm').addEventListener('submit', function(e){
+e.preventDefault();
+alert('Welcome! Your account is created (demo).');
+});
+});
+</script>
+</body>
+</html>
