@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FoodLoop – Affordable Meals, Less Waste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #0f172a;
+    --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+    --accent: #fbbf24;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --glass-bg: rgba(255,255,255,0.03);
+    --glass-border: rgba(255,255,255,0.1);
+    --glass-radius: 24px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, sans-serif;
+    line-height:1.6;
+  }
+  a { color:inherit; text-decoration:none; }
+  img { max-width:100%; height:auto; display:block; }
+  .container {
+    width:90%;
+    max-width:1200px;
+    margin:0 auto;
+  }
+  /* Navbar */
+  .navbar {
+    position:fixed; top:0; left:0; right:0;
+    height:70px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 1rem;
+    z-index:1000;
+    transition:height .3s, background .3s, backdrop-filter .3s;
+  }
+  .navbar.scrolled {
+    height:55px;
+    background:rgba(15,23,42,0.8);
+    backdrop-filter:blur(8px);
+  }
+  .logo { font-size:1.5rem; font-weight:700; background:var(--primary-gradient);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .nav-links { display:flex; gap:1.5rem; }
+  .nav-links a { font-size:0.95rem; color:var(--muted); transition:color .2s; }
+  .nav-links a:hover { color:var(--text); }
+  .cta-btn {
+    background:var(--accent); color:#0f172a; padding:.6rem 1.2rem;
+    border-radius:999px; font-weight:600; transition:transform .2s;
+  }
+  .cta-btn:hover { transform:scale(1.05); }
+  /* Hero */
+  .hero {
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center; padding-top:70px; /* offset navbar */
+  }
+  .hero-content {
+    max-width:800px;
+  }
+  .hero h1 {
+    font-size:clamp(2.5rem, 5vw, 4.5rem);
+    margin-bottom:1rem;
+    background:var(--primary-gradient);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .hero p {
+    font-size:1.125rem;
+    color:var(--muted);
+    margin-bottom:2rem;
+    line-height:1.8;
+  }
+  .hero .buttons {
+    display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;
+  }
+  .hero .buttons a:nth-child(2) {
+    background:transparent; border:2px solid var(--accent);
+    color:var(--accent);
+  }
+  /* Sections */
+  section { padding:100px 0; opacity:0; transform:translateY(30px);
+    transition:opacity .6s ease, transform .6s ease; }
+  section.visible { opacity:1; transform:translateY(0); }
+  .section-title {
+    text-align:center; font-size:2rem; margin-bottom:3rem;
+    position:relative;
+  }
+  .section-title::after {
+    content:''; position:absolute; left:50%; bottom:-10px;
+    transform:translateX(-50%); width:60px; height:4px;
+    background:var(--primary-gradient);
+    border-radius:2px;
+  }
+  /* Feature cards */
+  .features { display:grid; gap:2rem; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); }
+  .feature-card {
+    background:var(--glass-bg);
+    backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border);
+    border-radius:var(--glass-radius);
+    padding:2rem;
+    text-align:center;
+    transition:transform .3s, border-color .3s;
+  }
+  .feature-card:hover {
+    transform:translateY(-8px);
+    border-color:rgba(255,255,255,0.2);
+  }
+  .feature-card h3 { margin:1.5rem 0 1rem; font-size:1.25rem; }
+  .feature-card p { color:var(--muted); font-size:0.95rem; }
+  /* Map & Search */
+  .map-search { display:grid; gap:2rem; grid-template-columns:1fr; }
+  @media (min-width:768px){
+    .map-search { grid-template-columns:2fr 1fr; }
+  }
+  #map { height:400px; border-radius:12px; overflow:hidden; }
+  .search-box {
+    background:var(--glass-bg);
+    backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border);
+    border-radius:var(--glass-radius);
+    padding:1.5rem;
+  }
+  .search-box h3 { margin-bottom:1rem; }
+  .search-box label { display:block; margin-bottom:.5rem; font-weight:600; }
+  .search-box input,
+  .search-box select {
+    width:100%; padding:.75rem; margin-bottom:1rem;
+    background:rgba(255,255,255,0.02);
+    border:1px solid var(--glass-border);
+    border-radius:8px; color:var(--text);
+  }
+  .search-box input::placeholder { color:var(--muted); opacity:0.7; }
+  /* Testimonials */
+  .testimonials { display:grid; gap:2rem; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); }
+  .testimonial {
+    background:var(--glass-bg);
+    backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border);
+    border-radius:var(--glass-radius);
+    padding:1.5rem;
+  }
+  .testimonial p { font-style:italic; color:var(--muted); margin-bottom:1rem; }
+  .testimonial .author { display:flex; align-items:center; gap:.75rem; }
+  .testimonial .author img {
+    width:40px; height:40px; border-radius:50%; object-fit:cover;
+  }
+  .testimonial .author-info h4 { margin:0; font-size:1rem; }
+  .testimonial .author-info p { margin:0; font-size:.85rem; color:var(--muted); }
+  /* CTA */
+  .cta-section {
+    text-align:center; background:var(--glass-bg);
+    backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border);
+    border-radius:var(--glass-radius);
+    padding:3rem 2rem;
+  }
+  .cta-section h2 { margin-bottom:1.5rem; font-size:2rem; }
+  /* Footer */
+  footer {
+    background:rgba(15,23,42,0.6);
+    backdrop-filter:blur(6px);
+    padding:2rem 0;
+    text-align:center; font-size:.9rem; color:var(--muted);
+  }
+  footer a { margin:0 .5rem; color:var(--accent); transition:opacity .2s; }
+  footer a:hover { opacity:0.8; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">FoodLoop</nav>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#cta">Get Started</a>
+  </div>
+  <a href="#signup" class="cta-btn">Sign Up</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>Affordable Meals, Less Waste</h1>
+      <p>FoodLoop connects restaurants with surplus end‑of‑day meals to nearby students and budget‑conscious diners, offering affordable food while reducing waste and supporting local sustainability.</p>
+      <div class="buttons">
+        <a href="#signup" class="cta-btn">Join Now</a>
+        <a href="#login" class="cta-btn">Log In</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works (Map + Search) -->
+<section id="how-it-works" class="container">
+  <h2 class="section-title">How It Works</h2>
+  <div class="map-search">
+    <div id="map"></div>
+    <div class="search-box">
+      <h3>Find Meals Near You</h3>
+      <label for="cuisine">Cuisine</label>
+      <select id="cuisine">
+        <option value="">Any</option>
+        <option value="Italian">Italian</option>
+        <option value="Asian">Asian</option>
+        <option value="Mexican">Mexican</option>
+        <option value="American">American</option>
+        <option value="Middle Eastern">Middle Eastern</option>
+      </select>
+      <label for="price">Max Price ($)</label>
+      <input type="number" id="price" placeholder="e.g. 5">
+      <label for="distance">Distance (mi)</label>
+      <input type="number" id="distance" placeholder="e.g. 2">
+      <button class="cta-btn" style="width:100%;margin-top:1rem;">Search</button>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features" class="container">
+  <h2 class="section-title">Features</h2>
+  <div class="features">
+    <div class="feature-card">
+      <h3>Restaurant Listings</h3>
+      <p>Curated directory of partner restaurants uploading daily surplus inventory with dish details, original and discounted prices.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Real‑Time Inventory</h3>
+      <p>Live updates every 15 minutes so you only see current stock and avoid over‑ordering.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Geolocation‑Based Search</h3>
+      <p>Map and proximity filters show nearby meals, distance, and estimated travel time.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Secure Payment</h3>
+      <p>In‑app checkout with multiple payment methods, instant confirmation, and digital receipts.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Rating &amp; Review System</h3>
+      <p>Post‑purchase feedback helps future customers and encourages restaurants to maintain quality.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="container">
+  <h2 class="section-title">What Users Say</h2>
+  <div class="testimonials">
+    <div class="testimonial">
+      <p>“I saved $12 on dinner tonight and felt good knowing I helped reduce waste.”</p>
+      <div class="author">
+        <img src="https://i.pravatar.cc/40?img=1" alt="Alex">
+        <div class="author-info">
+          <h4>Alex</h4>
+          <p>College Student</p>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <p>“Finding cheap, tasty meals near campus used to be a hassle—now it’s just a tap away.”</p>
+      <div class="author">
+        <img src="https://i.pravatar.cc/40?img=2" alt="Maya">
+        <div class="author-info">
+          <h4>Maya</h4>
+          <p>Budget Shopper</p>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <p>“Seeing the impact of each purchase makes me proud to support sustainable dining.”</p>
+      <div class="author">
+        <img src="https://i.pravatar.cc/40?img=3" alt="Jordan">
+        <div class="author-info">
+          <h4>Jordan</h4>
+          <p>Eco‑Conscious Diner</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="container">
+  <div class="cta-section">
+    <h2>Ready to Loop In?</h2>
+    <p>Join thousands of students and diners saving money while fighting food waste.</p>
+    <a href="#signup" class="cta-btn">Get Started Free</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <p>&copy; <span id="year"></span> FoodLoop. All rights reserved.</p>
+    <a href="#">Privacy</a> · <a href="#">Terms</a>
+    <div style="margin-top:1rem;">
+      <a href="#" aria-label="Facebook">📘</a>
+      <a href="#" aria-label="Twitter">🐦</a>
+      <a href="#" aria-label="Instagram">📸</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Leaflet CSS & JS for map -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-sA+e2G0JzVxKZk0X3G6G6G6G6G6G6G6G6G6G6G6G6G6="
+  crossorigin=""
+/>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-o9N1j8eVxJcKkK6G6G6G6G6G6G6G6G6G6G6G6G6G6G6="
+  crossorigin=""
+></script>
+
+<script>
+  // IntersectionObserver for fade‑in sections
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  sections.forEach(sec => observer.observe(sec));
+
+  // Navbar shrink/blur on scroll
+  const navbar = document.querySelector('.navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+
+  // Initialize Leaflet map (placeholder)
+  const map = L.map('map').setView([40.7128, -74.0060], 13); // NYC example
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+  L.marker([40.7128, -74.0060]).addTo(map)
+    .bindPopup('Sample restaurant with surplus meals')
+    .openPopup();
+
+  // Set year in footer
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
