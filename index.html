@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FoodLoop – Save Food, Save Money</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg: #0f172a;
+    --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+    --accent: #fbbf24;
+    --text: #f8fafc;
+    --glass-bg: rgba(255,255,255,0.03);
+    --glass-border: rgba(255,255,255,0.1);
+    --glass-radius: 24px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration:none; }
+  img { max-width:100%; height:auto; display:block; }
+  .container {
+    width:90%;
+    max-width:1200px;
+    margin:0 auto;
+  }
+  /* Navbar */
+  nav {
+    position:fixed;
+    top:0; left:0; right:0;
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 1rem;
+    background:rgba(15,23,42,0.4);
+    backdrop-filter:blur(8px);
+    z-index:1000;
+    transition:height .3s, background .3s;
+  }
+  nav.scrolled { height:55px; background:rgba(15,23,42,0.8); }
+  .logo { font-size:1.5rem; font-weight:600; background:var(--primary-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .nav-links { display:flex; gap:1.5rem; }
+  .nav-links a { font-size:0.95rem; opacity:0.8; transition:opacity .2s; }
+  .nav-links a:hover { opacity:1; }
+  /* Hero */
+  .hero {
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:120px 1rem 60px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before {
+    content:"";
+    position:absolute;
+    inset:0;
+    background:var(--primary-gradient);
+    opacity:.15;
+    z-index:0;
+  }
+  .hero .container { position:relative; z-index:1; }
+  .hero h1 {
+    font-size:clamp(2.5rem,5vw,4.5rem);
+    margin-bottom:1rem;
+    line-height:1.2;
+  }
+  .hero p {
+    font-size:1.125rem;
+    max-width:600px;
+    margin:0 auto 2rem;
+    opacity:0.9;
+  }
+  .cta-btn {
+    display:inline-block;
+    background:var(--accent);
+    color:var(--bg);
+    font-weight:600;
+    padding:0.9rem 1.8rem;
+    border-radius:50px;
+    font-size:1rem;
+    transition:transform .2s, opacity .2s;
+  }
+  .cta-btn:hover { transform:translateY(-3px); opacity:0.9; }
+  .secondary-btn {
+    display:inline-block;
+    margin-left:1rem;
+    border:2px solid var(--accent);
+    color:var(--accent);
+    background:transparent;
+    padding:0.9rem 1.8rem;
+    border-radius:50px;
+    font-weight:600;
+    transition:background .2s, color .2s;
+  }
+  .secondary-btn:hover { background:var(--accent); color:var(--bg); }
+  /* Sections */
+  section { padding:100px 1rem; opacity:0; transform:translateY(20px); transition:opacity .6s ease, transform .6s ease; }
+  section.visible { opacity:1; transform:translateY(0); }
+  section h2 {
+    font-size:2rem;
+    margin-bottom:1.5rem;
+    text-align:center;
+    position:relative;
+  }
+  section h2::after {
+    content:"";
+    position:absolute;
+    left:50%; transform:-50%;
+    bottom:-8px;
+    width:60px;
+    height:4px;
+    background:var(--primary-gradient);
+    border-radius:2px;
+  }
+  /* Glass card */
+  .glass-card {
+    background:var(--glass-bg);
+    backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border);
+    border-radius:var(--glass-radius);
+    padding:1.5rem;
+    transition:transform .3s;
+  }
+  .glass-card:hover { transform:translateY(-5px); }
+  .glass-card h3 { margin-bottom:0.8rem; font-size:1.25rem; display:flex; align-items:center; gap:0.5rem; }
+  .glass-card p { font-size:0.95rem; opacity:0.9; }
+  /* Features grid */
+  .features { display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
+  /* Partners / Users */
+  .partners, .users { display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; }
+  .partner-logo, .user-avatar {
+    width:120px; height:120px;
+    object-fit:cover;
+    border-radius:50%;
+    border:2px solid var(--glass-border);
+    background:var(--glass-bg);
+  }
+  /* Map */
+  #map { height:350px; border-radius:var(--glass-radius); overflow:hidden; border:1px solid var(--glass-border); background:var(--glass-bg); }
+  /* Testimonials */
+  .testimonials { display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+  .testimonial {
+    background:var(--glass-bg);
+    backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border);
+    border-radius:var(--glass-radius);
+    padding:1.5rem;
+  }
+  .testimonial p { font-style:italic; margin-bottom:1rem; }
+  .testimonial .author { font-weight:600; display:flex; align-items:center; gap:0.5rem; }
+  .testimonial .author img { width:36px; height:36px; border-radius:50%; object-fit:cover; }
+  /* Form */
+  form { display:grid; gap:1rem; max-width:500px; margin:0 auto; }
+  form input, form button {
+    width:100%;
+    padding:0.9rem;
+    border:none;
+    border-radius:8px;
+    font-size:1rem;
+  }
+  form input {
+    background:var(--glass-bg);
+    color:var(--text);
+    border:1px solid var(--glass-border);
+  }
+  form button {
+    background:var(--primary-gradient);
+    color:var(--text);
+    font-weight:600;
+    cursor:pointer;
+    transition:opacity .2s;
+  }
+  form button:hover { opacity:0.9; }
+  /* Footer */
+  footer {
+    text-align:center;
+    padding:2rem 1rem;
+    font-size:0.9rem;
+    opacity:0.7;
+  }
+  /* Responsive tweaks */
+  @media (max-width:480px) {
+    .nav-links { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">FoodLoop</div>
+  <div class="nav-links">
+    <a href="#how">How It Works</a>
+    <a href="#partners">Partners</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#signup">Sign Up</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <h1>End‑of‑Day Meals, Discounted & Delivered</h1>
+    <p>Join students and budget‑conscious diners saving money while fighting food waste.</p>
+    <a href="#signup" class="cta-btn">Get Early Access</a>
+    <a href="#how" class="secondary-btn">Learn How</a>
+  </div>
+</header>
+
+<section id="problem">
+  <div class="container">
+    <h2>The Problem</h2>
+    <div class="features">
+      <div class="glass-card">
+        <h3>🍽️ Food Waste</h3>
+        <p>Restaurants throw away tons of perfectly good food each day.</p>
+      </div>
+      <div class="glass-card">
+        <h3>💸 High Meal Costs</h3>
+        <p>Students and budget‑conscious diners struggle to afford healthy meals.</p>
+      </div>
+      <div class="glass-card">
+        <h3>📉 Lost Revenue</h3>
+        <p>Unsold inventory means missed profit for restaurant owners.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="container">
+    <h2>How It Works</h2>
+    <div class="features">
+      <div class="glass-card">
+        <h3>📲 List Surplus</h3>
+        <p>Restaurants upload end‑of‑day meals with photos, price, and quantity.</p>
+      </div>
+      <div class="glass-card">
+        <h3>📍 Find Nearby</h3>
+        <p>Users see discounted meals within walking distance or campus radius.</p>
+      </div>
+      <div class="glass-card">
+        <h3>💳 Secure Checkout</h3>
+        <p>In‑app payment confirms purchase instantly; receipt generated.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="partners">
+  <div class="container">
+    <h2>Restaurant Partners</h2>
+    <div class="partners">
+      <!-- Placeholder logos -->
+      <img src="https://via.placeholder.com/120?text=Bistro+One" alt="Bistro One" class="partner-logo">
+      <img src="https://via.placeholder.com/120?text=Green+Leaf" alt="Green Leaf" class="partner-logo">
+      <img src="https://via.placeholder.com/120?text=Spice+Hub" alt="Spice Hub" class="partner-logo">
+      <img src="https://via.placeholder.com/120?text=Urban+Grill" alt="Urban Grill" class="partner-logo">
+    </div>
+  </div>
+</section>
+
+<section id="users">
+  <div class="container">
+    <h2>Student &amp; Diners Community</h2>
+    <div class="users">
+      <img src="https://via.placeholder.com/120?text=Emma" alt="Emma" class="user-avatar">
+      <img src="https://via.placeholder.com/120?text=Raj" alt="Raj" class="user-avatar">
+      <img src="https://via.placeholder.com/120?text=Carlos" alt="Carlos" class="user-avatar">
+      <img src="https://via.placeholder.com/120?text=Lina" alt="Lina" class="user-avatar">
+    </div>
+  </div>
+</section>
+
+<section id="map">
+  <div class="container">
+    <h2>Live Map of Available Meals</h2>
+    <div id="map">
+      <!-- This div will be populated by JS with a simple Leaflet map -->
+    </div>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div class="container">
+    <h2>What People Say</h2>
+    <div class="testimonials">
+      <div class="testimonial">
+        <p>“I saved 60% on my lunch and felt good knowing I helped reduce waste.”</p>
+        <div class="author"><img src="https://via.placeholder.com/36?text=E" alt="">Emma, Sophomore</div>
+      </div>
+      <div class="testimonial">
+        <p>“Listing surplus took seconds and brought in extra revenue tonight.”</p>
+        <div class="author"><img src="https://via.placeholder.com/36?text=C" alt="">Carlos, Owner</div>
+      </div>
+      <div class="testimonial">
+        <p>“The map shows exactly what’s nearby—no more guessing.”</p>
+        <div class="author"><img src="https://via.placeholder.com/36?text=R" alt="">Raj, City Dweller</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="signup">
+  <div class="container">
+    <h2>Join the Loop</h2>
+    <p>Be the first to know when FoodLoop launches in your city.</p>
+    <form id="signupForm">
+      <input type="email" placeholder="Your email address" required>
+      <button type="submit">Notify Me</button>
+    </form>
+    <p id="formMsg" style="margin-top:1rem; font-size:0.9rem; opacity:0.8;"></p>
+  </div>
+</section>
+
+<footer>
+  &copy; <span id="year"></span> FoodLoop. All rights reserved.
+</footer>
+
+<script>
+  // Navbar scroll effect
+  const nav = document.querySelector('nav');
+  let lastScrollY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > lastScrollY && window.scrollY > 100) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+    lastScrollY = window.scrollY;
+  });
+
+  // IntersectionObserver for sections
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+  sections.forEach(sec => observer.observe(sec));
+
+  // Simple map using Leaflet (CDN)
+  function loadMap() {
+    if (typeof L === 'undefined') {
+      const leafletCSS = document.createElement('link');
+      leafletCSS.rel = 'stylesheet';
+      leafletCSS.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      leafletCSS.integrity = 'sha256-sA+e2K0Jz1Z6VxVfGkK9X6Y5V6b6c6V6X6V6V6V6V6V6=';
+      leafletCSS.crossOrigin = '';
+      document.head.appendChild(leafletCSS);
+      const leafletJS = document.createElement('script');
+      leafletJS.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      leafletJS.integrity = 'sha256-o9N1j7eJcJcJcJcJcJcJcJcJcJcJcJcJcJcJcJcJcJcJc=';
+      leafletJS.crossOrigin = '';
+      leafletJS.onload = initMap;
+      document.head.appendChild(leafletJS);
+    } else {
+      initMap();
+    }
+  }
+  function initMap() {
+    const mapDiv = document.getElementById('map');
+    if (!mapDiv) return;
+    const map = L.map(mapDiv).setView([40.7128, -74.0060], 13); // Example: NYC
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    // Mock markers for demo
+    const meals = [
+      {lat:40.713, lng:-74.005, title:"Vegan Bowl – $4"},
+      {lat:40.711, lng:-74.007, title:"Chicken Wrap – $3.5"},
+      {lat:40.714, lng:-74.002, title:"Pizza Slice – $2"}
+    ];
+    meals.forEach(m => {
+      L.marker([m.lat, m.lng]).addTo(map)
+        .bindPopup(`<b>${m.title}</b>`)
+        .openPopup();
+    });
+  }
+  loadMap();
+
+  // Form submission (mock API)
+  document.getElementById('signupForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const email = this.elements[0].value.trim();
+    const msg = document.getElementById('formMsg');
+    msg.textContent = 'Submitting…';
+    // Simulate API call
+    setTimeout(() => {
+      if (email.includes('@')) {
+        msg.textContent = `Thanks! We'll notify ${email} when we launch.`;
+        msg.style.color = '#2dd4bf';
+        this.reset();
+      } else {
+        msg.textContent = 'Please enter a valid email.';
+        msg.style.color = '#f87171';
+      }
+    }, 800);
+  });
+
+  // Set year in footer
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
