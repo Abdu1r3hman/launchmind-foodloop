@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FoodLoop – Save Food, Save Money</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#0f172a;
+  --primary-gradient:linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+  --accent:#fbbf24;
+  --text:#f8fafc;
+  --glass-bg:rgba(255,255,255,0.03);
+  --glass-border:rgba(255,255,255,0.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:100%}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui, sans-serif;
+  line-height:1.6;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.container{
+  width:90%;
+  max-width:1200px;
+  margin:0 auto;
+}
+section{
+  padding:100px 0;
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity .6s ease,transform .6s ease;
+}
+section.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+/* Navbar */
+.navbar{
+  position:fixed;
+  top:0;left:0;right:0;
+  height:80px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(15,23,42,0.6);
+  backdrop-filter:blur(8px);
+  z-index:1000;
+  transition:height .3s ease,background .3s ease;
+}
+.navbar.scrolled{
+  height:60px;
+  background:rgba(15,23,42,0.95);
+  backdrop-filter:blur(12px);
+}
+.navbar .logo{
+  font-size:1.5rem;
+  font-weight:700;
+  background:var(--primary-gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.navbar ul{
+  display:flex;
+  gap:2rem;
+  list-style:none;
+}
+.navbar ul li a{
+  font-size:1rem;
+  padding:.4rem .8rem;
+  border-radius:4px;
+  transition:background .2s;
+}
+.navbar ul li a:hover{
+  background:rgba(255,255,255,0.1);
+}
+/* Hero */
+.hero{
+  min-height:calc(100vh - 80px);
+  display:flex;
+  align-items:center;
+  text-align:center;
+}
+.hero .container{
+  display:flex;
+  flex-direction:column;
+  gap:1.5rem;
+}
+.hero h1{
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  font-weight:800;
+  line-height:1.2;
+  margin:0;
+}
+.hero p{
+  font-size:1.125rem;
+  max-width:36rem;
+  margin:0 auto;
+}
+.cta-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:1rem;
+  justify-content:center;
+}
+.cta-buttons a{
+  flex:1 1 180px;
+  padding:.9rem 1.5rem;
+  border-radius:12px;
+  font-weight:600;
+  text-align:center;
+  transition:transform .2s,box-shadow .2s;
+}
+.cta-buttons .primary{
+  background:var(--accent);
+  color:var(--bg);
+}
+.cta-buttons .secondary{
+  border:2px solid var(--accent);
+  color:var(--accent);
+}
+.cta-buttons a:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 20px rgba(0,0,0,.3);
+}
+/* Section Titles */
+.section-title{
+  text-align:center;
+  margin-bottom:2rem;
+  font-size:clamp(1.8rem,4vw,2.5rem);
+  font-weight:700;
+}
+.section-title span{
+  display:inline-block;
+  background:var(--primary-gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+/* How it works */
+.how-it-works .steps{
+  display:grid;
+  gap:1.5rem;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+}
+.step-card{
+  background:var(--glass-bg);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--glass-border);
+  border-radius:24px;
+  padding:2rem;
+  text-align:center;
+  transition:transform .3s;
+}
+.step-card:hover{
+  transform:translateY(-5px);
+}
+.step-card .icon{
+  width:48px;height:48px;
+  margin:0 auto 1rem;
+  background:var(--primary-gradient);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--bg);
+  font-weight:600;
+}
+.step-card h3{
+  margin:1rem 0 .5rem;
+  font-size:1.25rem;
+}
+.step-card p{
+  font-size:.95rem;
+  color:#cbd5e1;
+}
+/* Testimonials */
+.testimonials .slider{
+  display:grid;
+  gap:1.5rem;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+}
+.testimonial-card{
+  background:var(--glass-bg);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--glass-border);
+  border-radius:24px;
+  padding:1.8rem;
+}
+.testimonial-card p{
+  font-style:italic;
+  margin-bottom:1rem;
+  color:#e2e8f0;
+}
+.testimonial-card .author{
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+  font-size:.9rem;
+}
+.testimonial-card .author img{
+  width:36px;height:36px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--accent);
+}
+/* Map */
+.map-section #map-placeholder{
+  width:100%;
+  height:400px;
+  background:var(--glass-bg);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--glass-border);
+  border-radius:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#94a3b8;
+  font-size:1.1rem;
+}
+/* Signup */
+.signup-form{
+  background:var(--glass-bg);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--glass-border);
+  border-radius:24px;
+  padding:2.5rem;
+  max-width:480px;
+  margin:0 auto;
+}
+.signup-form h2{
+  text-align:center;
+  margin-bottom:1.5rem;
+  font-size:1.75rem;
+}
+.signup-form .form-group{
+  margin-bottom:1.2rem;
+}
+.signup-form label{
+  display:block;
+  margin-bottom:.4rem;
+  font-weight:600;
+}
+.signup-form input,
+.signup-form select{
+  width:100%;
+  padding:.8rem;
+  border:none;
+  border-radius:8px;
+  background:rgba(255,255,255,0.05);
+  color:var(--text);
+  font-size:1rem;
+}
+.signup-form input::placeholder{
+  color:#94a3b8;
+}
+.signup-form button{
+  width:100%;
+  padding:.9rem;
+  background:var(--accent);
+  color:var(--bg);
+  border:none;
+  border-radius=12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:background .2s;
+}
+.signup-form button:hover{
+  background:#f59e0b;
+}
+/* Responsive tweaks */
+@media (max-width:480px){
+  .navbar ul{display:none;}
+  .hero{text-align:left;}
+  .cta-buttons{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">FoodLoop</div>
+  <ul>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#testimonials">Testimonials</a></li>
+    <li><a href="#map">Map</a></li>
+    <li><a href="#signup">Sign Up</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>End‑of‑Day Surplus, Discounted Meals</h1>
+    <p>Connecting restaurants with surplus food to students and budget‑conscious diners—saving money, reducing waste, and supporting local sustainability.</p>
+    <div class="cta-buttons">
+      <a href="#signup" class="primary">Join as Restaurant</a>
+      <a href="#signup" class="secondary">Join as Consumer</a>
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works" class="section-title">
+  <h2><span>How It Works</span></h2>
+  <div class="container">
+    <div class="steps">
+      <div class="step-card">
+        <div class="icon">1</div>
+        <h3>List Surplus</h3>
+        <p>Restaurants upload unsold items with price and expiry.</p>
+      </div>
+      <div class="step-card">
+        <div class="icon">2</div>
+        <h3>Discover Nearby</h3>
+        <p>Users see geo‑tagged deals, filter by cuisine, price, distance.</p>
+      </div>
+      <div class="step-card">
+        <div class="icon">3</div>
+        <h3>Enjoy & Review</h3>
+        <p>Purchase, enjoy the meal, and leave feedback to build trust.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials" class="section-title">
+  <h2><span>What People Say</span></h2>
+  <div class="container">
+    <div class="slider">
+      <div class="testimonial-card">
+        <p>“I saved 60% on my lunch and helped cut waste—win‑win!”</p>
+        <div class="author">
+          <img src="https://i.pravatar.cc/40?img=1" alt="Alex">
+          <div>
+            <strong>Alex</strong><br>
+            <small>College Student</small>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p>“Listing surplus takes seconds, and I see real extra revenue.”</p>
+        <div class="author">
+          <img src="https://i.pravatar.cc/40?img=2" alt="Sam">
+          <div>
+            <strong>Sam</strong><br>
+            <small>Restaurant Owner</small>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p>“The map shows exactly what’s nearby—no more guesswork.”</p>
+        <div class="author">
+          <img src="https://i.pravatar.cc/40?img=3" alt="Jordan">
+          <div>
+            <strong>Jordan</strong><br>
+            <small>Budget‑Conscious Diner</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="map" class="section-title">
+  <h2><span>Find Meals Near You</span></h2>
+  <div class="container">
+    <div id="map-placeholder">
+      📍 Interactive map showing live listings (placeholder)
+    </div>
+  </div>
+</section>
+
+<section id="signup" class="section-title">
+  <h2><span>Get Started</span></h2>
+  <div class="container">
+    <form class="signup-form" id="signupForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required placeholder="Your name">
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label for="role">I am a…</label>
+        <select id="role" name="role" required>
+          <option value="">Select role</option>
+          <option value="restaurant">Restaurant Owner</option>
+          <option value="consumer">Consumer / Student</option>
+        </select>
+      </div>
+      <button type="submit">Join FoodLoop</button>
+    </form>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const navbar = document.querySelector('.navbar');
+  const sections = document.querySelectorAll('section');
+
+  // Navbar shrink on scroll
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+
+  // IntersectionObserver for fade‑in sections
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  // Simple form validation (no page reload)
+  const form = document.getElementById('signupForm');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    alert('Thanks! We’ll be in touch soon.');
+    form.reset();
+  });
+});
+</script>
+</body>
+</html>
