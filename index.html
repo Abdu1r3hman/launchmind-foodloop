@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FoodLoop</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --bg:#0f172a;
+  --primary-gradient:linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+  --accent:#fbbf24;
+  --text:#f8fafc;
+}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+}
+.container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 1rem;
+}
+section{
+  padding:100px 0;
+}
+h1{
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  text-align:center;
+  margin-bottom:0.5rem;
+}
+h2{
+  text-align:center;
+  font-size:1.8rem;
+  margin-bottom:2rem;
+  color:var(--primary-gradient);
+}
+p{
+  text-align:center;
+  max-width:600px;
+  margin:0 auto 2rem;
+  color:var(--text);
+}
+.btn{
+  display:inline-block;
+  background:var(--accent);
+  color:#0f172a;
+  padding:0.75rem 1.5rem;
+  border-radius:8px;
+  font-weight:600;
+  transition:transform 0.3s,box-shadow 0.3s;
+}
+.btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+}
+.feature-card{
+  background:rgba(255,255,255,0.03);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:24px;
+  padding:2rem;
+  margin:1rem;
+  transition:transform 0.3s;
+}
+.feature-card:hover{
+  transform:translateY(-4px);
+}
+.map-container{
+  position:relative;
+  height:400px;
+  overflow:hidden;
+  border-radius:12px;
+  margin:2rem 0;
+}
+.map-placeholder{
+  width:100%;
+  height:100%;
+  background:#3b82f6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:1.2rem;
+}
+.testimonial{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;
+  padding:1.5rem;
+  margin:1rem 0;
+}
+.testimonial p{
+  margin:0.5rem 0;
+}
+.accordion{
+  width:100%;
+  max-width:800px;
+  margin:2rem auto;
+}
+.accordion-item{
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.accordion-header{
+  cursor:pointer;
+  padding:1rem;
+  width:100%;
+  text-align:left;
+  background:rgba(255,255,255,0.03);
+  border-radius:12px;
+  margin-bottom:0.5rem;
+  transition:background 0.3s;
+}
+.accordion-header:hover{
+  background:rgba(255,255,255,0.07);
+}
+.accordion-content{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.4s ease-out;
+  background:rgba(255,255,255,0.03);
+  border-radius:8px;
+  padding:0 1rem 1rem;
+}
+.accordion-content p{
+  margin:1rem 0;
+}
+footer{
+  background:rgba(0,0,0,0.5);
+  padding:2rem 0;
+  text-align:center;
+  font-size:0.9rem;
+}
+footer a{
+  color:var(--accent);
+  text-decoration:none;
+  margin:0 0.5rem;
+}
+footer a:hover{
+  text-decoration:underline;
+}
+.navbar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  background:rgba(15,23,42,0.8);
+  backdrop-filter:blur(10px);
+  padding:1rem 0;
+  transition:background 0.3s,padding 0.3s;
+  z-index:1000;
+}
+.navbar.shrink{
+  background:rgba(15,23,42,0.95);
+  padding:0.5rem 0;
+}
+.nav-list{
+  display:flex;
+  justify-content:center;
+  gap:2rem;
+}
+.nav-list a{
+  color:var(--text);
+  font-weight:500;
+  text-decoration:none;
+  transition:color 0.3s;
+}
+.nav-list a:hover{
+  color:var(--accent);
+}
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding-top:4rem;
+}
+.video-wrapper{
+  margin:2rem 0;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+}
+.video-wrapper iframe{
+  width:100%;
+  height:auto;
+}
+@media (min-width:768px){
+  .hero{
+    flex-direction:row;
+    align-items:center;
+  }
+  .hero-content{
+    flex:1;
+    max-width:50%;
+    text-align:left;
+    margin-right:2rem;
+  }
+  .hero-media{
+    flex:1;
+    max-width:50%;
+  }
+}
+.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.visible{
+  animation:fadeInUp 0.8s forwards;
+}
+</style>
+</head>
+<body>
+<header class="navbar" id="navbar">
+  <div class="container">
+    <nav>
+      <ul class="nav-list">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#signup">Sign Up</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section id="hero" class="hero">
+  <div class="container hero-content">
+    <h1>End Food Waste, Feed Communities</h1>
+    <p>Discover discounted meals near you and help restaurants reduce waste.</p>
+    <div class="hero-media">
+      <video class="video-wrapper" playsinline muted loop>
+        <source src="https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="features">
+  <h2>Our Core Features</h2>
+  <div class="container">
+    <div class="feature-card visible">
+      <h3>Restaurant Listings</h3>
+      <p>Searchable directory of daily surplus meals with photos and descriptions.</p>
+    </div>
+    <div class="feature-card visible">
+      <h3>Real‑Time Inventory</h3>
+      <p>Automatic updates ensure only available meals are shown.</p>
+    </div>
+    <div class="feature-card visible">
+      <h3>Geolocation Search</h3>
+      <p>Map and proximity filters to find meals walking distance away.</p>
+    </div>
+    <div class="feature-card visible">
+      <h3>Secure Checkout</h3>
+      <p>In‑app payments with multiple methods and instant receipts.</p>
+    </div>
+    <div class="feature-card visible">
+      <h3>Ratings & Reviews</h3>
+      <p>User feedback loop to maintain quality and trust.</p>
+    </div>
+  </div>
+</section>
+
+<section id="signup" class="signup">
+  <h2>Join the Movement</h2>
+  <div class="container">
+    <form id="signupForm" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:2rem;">
+      <div style="margin-bottom:1rem;">
+        <label style="display:block;margin-bottom:0.5rem;color:#fff;">Restaurant Owner</label>
+        <input type="email" placeholder="restaurant@example.com" style="width:100%;padding:0.75rem;border:none;border-radius:8px;background:rgba(255,255,255,0.1);color:#fff;">
+      </div>
+      <div style="margin-bottom:1rem;">
+        <label style="display:block;margin-bottom:0.5rem;color:#fff;">Consumer</label>
+        <input type="email" placeholder="you@example.com" style="width:100%;padding:0.75rem;border:none;border-radius:8px;background:rgba(255,255,255,0.1);color:#fff;">
+      </div>
+      <button type="submit" class="btn">Get Started</button>
+    </form>
+  </div>
+</section>
+
+<section id="testimonials">
+  <h2>What Our Community Says</h2>
+  <div class="container">
+    <div class="testimonial">
+      <p>"FoodLoop helped me find cheap meals right after class. Love it!"</p>
+      <p><strong>Alex, College Student</strong></p>
+    </div>
+    <div class="testimonial">
+      <p>"I reduced my food waste and earned extra revenue. Fantastic!"</p>
+      <p><strong>Jordan, Restaurant Owner</strong></p>
+    </div>
+    <div class="testimonial">
+      <p>"Found a great deal on a sushi platter nearby. Perfect for my budget."</p>
+      <p><strong>Maya, Budget‑conscious Diner</strong></p>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="faq">
+  <h2>Frequently Asked Questions</h2>
+  <div class="container">
+    <div class="accordion">
+      <div class="accordion-item">
+        <div class="accordion-header">How does the geolocation search work?</div>
+        <div class="accordion-content"><p>We use your device's location to show nearby discounted meals. You can also filter by distance manually.</p></div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">Is the food safe to eat?</div>
+        <div class="accordion-content"><p>All listed meals are inspected by the restaurant and must be within their safe consumption window.</p></div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">Can I list my own meals?</div>
+        <div class="accordion-content"><p>Yes! Restaurant owners can sign up and list surplus dishes through our dashboard.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="container">
+    <p>© 2025 FoodLoop • <a href="mailto:info@foodloop.com">info@foodloop.com</a> • +1 (555) 123‑4567</p>
+    <div class="social-links" style="margin-top:0.5rem;">
+      <a href="#" style="margin:0 0.5rem;color:var(--accent);text-decoration:none;">Facebook</a>
+      <a href="#" style="margin:0 0.5rem;color:var(--accent);text-decoration:none;">Twitter</a>
+      <a href="#" style="margin:0 0.5rem;color:var(--accent);text-decoration:none;">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      navbar.classList.add('shrink');
+    } else {
+      navbar.classList.remove('shrink');
+    }
+  });
+
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {threshold: 0.1});
+  sections.forEach(sec => observer.observe(sec));
+
+  const accordionHeaders = document.querySelectorAll('.accordion-header');
+  accordionHeaders.forEach(header => {
+    header.addEventListener('click', () => {
+      const content = header.nextElementSibling;
+      const height = content.scrollHeight;
+      if (content.style.maxHeight) {
+        content.style.maxHeight = '';
+      } else {
+        content.style.maxHeight = `${height}px`;
+      }
+    });
+  });
+
+  const signupForm = document.getElementById('signupForm');
+  signupForm.addEventListener('submit', e => {
+    e.preventDefault();
+    alert('Thank you for signing up! We will contact you soon.');
+    signupForm.reset();
+  });
+});
+</script>
+</body>
+</html>
