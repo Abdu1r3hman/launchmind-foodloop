@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FoodLoop – Fight Food Waste</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #0f172a;
+    --primary: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+    --accent: #fbbf24;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --glass-bg: rgba(255,255,255,0.03);
+    --glass-border: rgba(255,255,255,0.1);
+    --radius: 24px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration:none; }
+  img, iframe { max-width:100%; display:block; border-radius:8px; }
+  .container { width:90%; max-width:1200px; margin:0 auto; }
+  /* Navbar */
+  nav {
+    position:fixed; top:0; left:0; right:0;
+    height:70px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 1rem; z-index:1000;
+    background:transparent;
+    transition:background .3s, backdrop-filter .3s;
+  }
+  nav.scrolled {
+    background:rgba(15,23,42,0.8);
+    backdrop-filter:blur(8px);
+  }
+  .logo { font-size:1.5rem; font-weight:600; background:var(--primary); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .nav-links { display:none; }
+  @media (min-width:768px){
+    .nav-links { display:flex; gap:2rem; }
+    .nav-links a { font-size:0.95rem; }
+  }
+  /* Hero */
+  .hero {
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:120px 1rem 60px;
+    position:relative; overflow:hidden;
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(circle at center, rgba(59,130,246,0.15), transparent 70%);
+    pointer-events:none;
+  }
+  .hero h1 {
+    font-size:clamp(2.5rem, 5vw, 4.5rem);
+    margin-bottom:1rem;
+    line-height:1.2;
+  }
+  .hero p { font-size:1.125rem; color:var(--muted); margin-bottom:2rem; max-width:600px; margin-left:auto; margin-right:auto; }
+  .hero .btn {
+    display:inline-block; background:var(--accent); color:#0f172a;
+    padding:0.9rem 2rem; border-radius:50px; font-weight:600;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .hero .btn:hover{ transform:translateY(-3px); box-shadow:0 8px 20px rgba(251,191,36,0.4); }
+  /* Sections */
+  section { padding:100px 1rem; opacity:0; transform:translateY(30px); transition:opacity .6s ease, transform .6s ease; }
+  section.visible { opacity:1; transform:translateY(0); }
+  .section-title { text-align:center; margin-bottom:2rem; font-size:clamp(1.8rem, 4vw, 2.5rem); position:relative; }
+  .section-title::after{
+    content:""; position:absolute; left:50%; bottom:-8px; transform:-50%;
+    width:60px; height:4px; background:var(--primary); border-radius:2px;
+  }
+  /* Benefits / How it works */
+  .benefits-grid, .how-grid { display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); }
+  .card {
+    background:var(--glass-bg); backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border); border-radius:var(--radius);
+    padding:1.5rem; text-align:center; transition:transform .3s;
+  }
+  .card:hover{ transform:translateY(-6px); }
+  .card h3 { margin:1rem 0; font-size:1.25rem; }
+  .card p { color:var(--muted); font-size:0.95rem; }
+  /* Map & Video */
+  .media-wrapper { position:relative; height:0; padding-bottom:56.25%; margin:1.5rem 0; }
+  .media-wrapper iframe { position:absolute; inset:0; border:none; }
+  /* Forms */
+  .form-group { margin-bottom:1rem; }
+  .form-group input, .form-group select {
+    width:100%; padding:0.8rem; border:none; border-radius:6px;
+    background:rgba(255,255,255,0.05); color:var(--text);
+    font-size:1rem;
+  }
+  .form-group input::placeholder { color:var(--muted); }
+  .btn-primary { background:var(--primary); color:#fff; border:none; padding:0.9rem 1.8rem; border-radius:50px; font-weight:600; cursor:pointer; transition:opacity .2s; }
+  .btn-primary:hover{ opacity:0.9; }
+  .btn-secondary { background:var(--accent); color:#0f172a; border:none; padding:0.9rem 1.8rem; border-radius:50px; font-weight:600; cursor:pointer; }
+  /* Testimonials */
+  .testimonials { display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); }
+  .testimonial {
+    background:var(--glass-bg); backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border); border-radius:var(--radius);
+    padding:1.5rem; position:relative;
+  }
+  .testimonial::before{ content:"“"; position:absolute; top:-10px; left:10px; font-size:4rem; color:rgba(255,255,255,0.1); }
+  .testimonial p { font-style:italic; margin-bottom:1rem; color:var(--muted); }
+  .testimonial .author { font-weight:600; display:flex; align-items:center; gap:0.5rem; }
+  .testimonial .author img { width:36px; height:36px; border-radius:50%; object-fit:cover; }
+  /* CTA */
+  .cta { text-align:center; }
+  .cta h2 { font-size:clamp(1.8rem, 4vw, 2.2rem); margin-bottom:1rem; }
+  .cta p { color:var(--muted); margin-bottom:1.5rem; max-width:560px; margin-left:auto; margin-right:auto; }
+  /* Footer */
+  footer { text-align:center; padding:2rem 1rem; font-size:0.9rem; color:var(--muted); }
+  /* Responsive tweaks */
+  @media (max-width:480px){
+    nav { height:60px; }
+    .hero h1 { font-size:clamp(2rem, 6vw, 3rem); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">FoodLoop</div>
+  <div class="nav-links">
+    <a href="#problem">Problem</a>
+    <a href="#benefits">Benefits</a>
+    <a href="#how">How It Works</a>
+    <a href="#partners">Restaurants</a>
+    <a href="#students">Students</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#cta">Get Early Access</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <h1>End‑of‑Day Meals, Zero Waste</h1>
+    <p>Connecting restaurants with surplus food to students and budget‑conscious diners.</p>
+    <a href="#cta" class="btn">Join the Waitlist</a>
+  </div>
+</header>
+
+<section id="problem">
+  <div class="container">
+    <h2 class="section-title">The Problem</h2>
+    <div class="benefits-grid">
+      <div class="card">
+        <h3>🍽️ High Food Costs</h3>
+        <p>Students spend a large portion of their budget on meals, often choosing convenience over nutrition.</p>
+      </div>
+      <div class="card">
+        <h3>⏳ Time‑Consuming Search</h3>
+        <p>Finding last‑minute discounts requires scrolling multiple apps or walking around campus.</p>
+      </div>
+      <div class="card">
+        <h3>♻️ Food Waste</h3>
+        <p>Restaurants discard perfectly good food at closing, hurting profits and the planet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="benefits">
+  <div class="container">
+    <h2 class="section-title">Why FoodLoop?</h2>
+    <div class="benefits-grid">
+      <div class="card">
+        <h3>💰 Save Money</h3>
+        <p>Get meals up to 70% off regular price.</p>
+      </div>
+      <div class="card">
+        <h3>📍 Nearby Options</h3>
+        <p>Geolocation shows deals within walking distance.</p>
+      </div>
+      <div class="card">
+        <h3>🚀 Instant Gratification</h3>
+        <p>Real‑time inventory means you see only what’s available.</p>
+      </div>
+      <div class="card">
+        <h3>🌱 Reduce Waste</h3>
+        <p>Every order saves food from landfill.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="container">
+    <h2 class="section-title">How It Works</h2>
+    <div class="how-grid">
+      <div class="card">
+        <h3>1️⃣ Restaurants List</h3>
+        <p>Upload surplus dishes, set price & pickup window.</p>
+      </div>
+      <div class="card">
+        <h3>2️⃣ Users Browse</h3>
+        <p>See discounted meals on a map, filter by distance or cuisine.</p>
+      </div>
+      <div class="card">
+        <h3>3️⃣ Order & Pay</h3>
+        <p>Secure in‑app payment, receive QR code for pickup.</p>
+      </div>
+      <div class="card">
+        <h3>4️⃣ Pickup & Enjoy</h3>
+        <p>Show QR at the restaurant, enjoy your meal!</p>
+      </div>
+    </div>
+    <div class="media-wrapper">
+      <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Demo video" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<section id="partners">
+  <div class="container">
+    <h2 class="section-title">Restaurant Partner Signup</h2>
+    <form class="partner-form" id="partnerForm">
+      <div class="form-group">
+        <input type="text" placeholder="Restaurant Name" required>
+      </div>
+      <div class="form-group">
+        <input type="email" placeholder="Contact Email" required>
+      </div>
+      <div class="form-group">
+        <input type="tel" placeholder="Phone Number" required>
+      </div>
+      <div class="form-group">
+        <input type="text" placeholder="Address" required>
+      </div>
+      <button type="submit" class="btn-primary">List Your Surplus</button>
+    </form>
+  </div>
+</section>
+
+<section id="students">
+  <div class="container">
+    <h2 class="section-title">Student / User Signup</h2>
+    <form class="user-form" id="userForm">
+      <div class="form-group">
+        <input type="text" placeholder="Full Name" required>
+      </div>
+      <div class="form-group">
+        <input type="email" placeholder="Email Address" required>
+      </div>
+      <div class="form-group">
+        <input type="tel" placeholder="Phone Number" required>
+      </div>
+      <div class="form-group">
+        <select>
+          <option value="">Select Your Campus / Area</option>
+          <option value="campus1">Main Campus</option>
+          <option value="campus2">East Campus</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-primary">Get Early Access</button>
+    </form>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div class="container">
+    <h2 class="section-title">What People Are Saying</h2>
+    <div class="testimonials">
+      <div class="testimonial">
+        <p>“I saved $120 last week and got fresh sushi for half the price. FoodLoop is a lifesaver!”</p>
+        <div class="author"><img src="https://i.pravatar.cc/40?img=1" alt="">Alex, College Student</div>
+      </div>
+      <div class="testimonial">
+        <p>“Listing my unsold pastries took 2 minutes. I’ve cut waste by 30% and earned extra revenue.”</p>
+        <div class="author"><img src="https://i.pravatar.cc/40?img=2" alt="">Maya, Budget‑Conscious Diner</div>
+      </div>
+      <div class="testimonial">
+        <p>“The real‑time inventory dashboard helps me plan prep better. No more guesswork.”</p>
+        <div class="author"><img src="https://i.pravatar.cc/40?img=3" alt="">Jordan, Restaurant Owner</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cta" class="cta">
+  <div class="container">
+    <h2>Ready to Fight Food Waste?</h2>
+    <p>Join our early‑access list and be the first to loop in surplus meals.</p>
+    <form id="earlyForm" class="early-form">
+      <div class="form-group">
+        <input type="email" placeholder="Your Email" required>
+      </div>
+      <button type="submit" class="btn-primary">Notify Me</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    &copy; <span id="year"></span> FoodLoop. All rights reserved.
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+
+  // IntersectionObserver for sections
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+  sections.forEach(sec => observer.observe(sec));
+
+  // Set year in footer
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Simple form handlers (prevent page reload, show thank you)
+  const forms = document.querySelectorAll('form');
+  forms.forEach(form => {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Thanks! We’ll be in touch soon.');
+      form.reset();
+    });
+  });
+</script>
+</body>
+</html>
